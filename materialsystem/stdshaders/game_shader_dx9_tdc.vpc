@@ -1,0 +1,30 @@
+//-----------------------------------------------------------------------------
+//	game_shader_dx9_tdc.vpc
+//
+//	Project Script for mods to use an an example of how to override shaders
+//-----------------------------------------------------------------------------
+
+$Macro SRCDIR		"..\.."
+$Macro GAMENAME "tdc"
+$Include "$SRCDIR\materialsystem\stdshaders\game_shader_dx9_base.vpc"
+
+$Project "Shaders (TDC)"
+{
+	$File	"buildtdcshaders.bat"
+	
+	$Folder	"Source Files"
+	{
+		$File	"desaturate.cpp"
+		
+		$File	"tdc_water.cpp"
+		$File	"tdc_lightmappedgeneric.cpp"
+		$File	"tdc_lightmappedgeneric_helper.cpp"
+		$File	"tdc_worldvertextransition.cpp"
+
+		$File	"tdc_cloak_blended_pass_helper.cpp"
+		$File	"tdc_emissive_scroll_blended_pass_helper.cpp"
+		$File	"tdc_flesh_interior_blended_pass_helper.cpp"
+		
+		$File	"post_tonemapping.cpp"
+	}
+}

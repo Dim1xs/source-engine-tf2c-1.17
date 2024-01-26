@@ -1,0 +1,69 @@
+#! /usr/bin/env python
+# encoding: utf-8
+
+from waflib import Utils
+import os
+
+top = '.'
+PROJECT_NAME = 'bsppack'
+
+def options(opt):
+	return
+
+def configure(conf):
+	conf.define('BSPPACK_EXPORTS', 1)
+	conf.define('ZIP_SUPPORT_LZMA_ENCODE', 1)
+	return
+
+def build(bld):
+	source = [
+		"../common/bsplib.cpp",
+		"bsppack.cpp",
+		"../common/cmdlib.cpp",
+		"../../public/filesystem_helpers.cpp",
+		"../../public/filesystem_init.cpp",
+		"../common/filesystem_tools.cpp",
+		"../../public/lumpfiles.cpp",
+		"../common/scriplib.cpp",
+		"../../public/zip_utils.cpp",
+		"../../filesystem/linux_support.cpp"
+	]
+
+	includes = [
+		'.',
+		'../common',
+		'../../public',
+		'../../public/tier0',
+		'../../public/tier1',
+		'../../public/tier2',
+		'../../public/tier3',
+		'../../public/mathlib',
+	]
+
+	defines = []
+
+	libs = [
+		"vstdlib",
+		"tier0",
+		"tier1",
+		"tier2",
+		"tier3",
+		"mathlib",
+		"lzma"
+	]
+
+	install_path = bld.env.LIBDIR
+
+	bld.shlib(
+		source   = source,
+		target   = PROJECT_NAME,
+		name     = PROJECT_NAME,
+		features = 'c cxx',
+		includes = includes,
+		defines  = defines,
+		use      = libs,
+		install_path = install_path,
+		subsystem = bld.env.MSVC_SUBSYSTEM,
+		idx      = bld.get_taskgen_count()
+	)
+

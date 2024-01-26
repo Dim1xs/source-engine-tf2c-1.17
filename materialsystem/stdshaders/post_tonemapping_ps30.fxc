@@ -1,0 +1,69 @@
+// Compucolor Pictures, Authored by Graham Dianaty 2019 
+
+#include "common_ps_fxc.h"
+
+sampler tex 				: register(s0);
+const float2 parms			: register(c0);
+	#define flExp			parms.x
+	#define flWhite			parms.y
+
+struct PS_INPUT
+{
+	float2 uv		: TEXCOORD0;
+};
+
+float3 DoTonemapping_HPD(sampler s_tex, float2 uv)
+{
+	float3 tex = tex2D(s_tex, uv).rgb;
+	tex = pow(tex, 1.0); // de-gamma
+	tex *= flExp; // exposure
+
+	float3 x = max(0, tex - 0.004);
+	float3 ret = (x * (6.2 * x + .5)) / (x * (6.2 * x + 1.7) + 0.06);
+
+	return ret; // HPD does NOT need re-gamma-ing. I hope.
+}
+
+float3 ReinhardSimple(float3 x){ return x/(1+x); }
+float3 ReinhardComplex(float3 x, float white) { return (x*(1+(x/pow(white, 2))))/(1+x); }
+float3 DoTonemapping_Rinehard(sampler s_tex, float2 uv)
+{
+	float3 tex = tex2D(s_tex, uv).rgb; 
+//	tex = pow(tex, 1.0); // de-gamma
+	tex *= flExp; // exposure
+
+
+	float3 processColor;
+	float lum;
+	lum = 0.2126f * tex[0] + 0.7152 * tex[1] + 0.0722 * tex[2];
+	
+	processColor = float3(lum, 0, 0);
+	processColor = ReinhardComplex(tex, flWhite);
+	
+	float lumScale = processColor / lum;
+	processColor = tex * lumScale;
+	
+//	tex = pow(tex, 1 / 1.0); // re-gamma
+	return tex;
+}
+
+float3 DoTonemapping_ACESN(sampler s_tex, float2 uv)
+{
+	float3 tex = tex2D(s_tex, uv).rgb; 
+//	tex = pow(tex, 1.0); // de-gamma
+	tex *= flExp; // exposure
+
+	tex = saturate((tex*(2.51*tex + 0.03)) / (tex*(2.43*tex + 0.59) + 0.14)); // actual ACESN
+
+//	tex = pow(tex, 1 / 1.0); // re-gamma
+	return tex;
+}
+
+float4 main(PS_INPUT i) : COLOR
+{
+	float alpha = 1.0;
+	
+	float3 flOutput = DoTonemapping_Rinehard(tex, i.uv);
+	
+	return float4(flOutput, alpha);
+}
