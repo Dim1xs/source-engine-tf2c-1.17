@@ -14,6 +14,8 @@ Source code is based on TF2 2018 leak. Don't use it for commercial purposes.
 
 This project is using waf buildsystem. If you have waf-related questions look https://waf.io/book
 
+# This Repo contains TF2Classic Source code, 1.17 source code.
+
 # Features:
 - Android, OSX, FreeBSD, Windows support
 - Arm support( except windows )
@@ -40,7 +42,7 @@ This project is using waf buildsystem. If you have waf-related questions look ht
 - [Building instructions(EN)](https://github.com/nillerusr/source-engine/wiki/Source-Engine-(EN))
 - [Building instructions(RU)](https://github.com/nillerusr/source-engine/wiki/Source-Engine-(RU))
 
-# Support me
+# Support Nillerusr
 BTC: `bc1qnjq92jj9uqjtafcx2zvnwd48q89hgtd6w8a6na`
 
 ETH: `0x5d0D561146Ed758D266E59B56e85Af0b03ABAF46`
